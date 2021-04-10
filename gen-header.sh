@@ -29,6 +29,8 @@ case "$(uname -s)" in
 			-e '/define HAVE_DECL_CLOCK_MONOTONIC/d' \
 			config.h
 		cp config.h ../autoconf-darwin/config.h ;;
+	"FreeBSD"|"freebsd")
+		cp config.h ../autoconf-freebsd/config.h ;;
 	*) die "Unknown platform" ;;
 esac
 
