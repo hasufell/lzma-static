@@ -20,7 +20,27 @@ cd "xz-${XZ_VER}"
 
 case "$(uname -s)" in
 	"linux"|"Linux")
-		cp config.h ../autoconf-linux/config.h ;;
+		case "$(uname -m)" in
+			x86_64|amd64)
+				if [ "$(getconf LONG_BIT)" = "32" ] ; then
+					cp config.h ../autoconf-linux-i386/config.h
+				else
+					cp config.h ../autoconf-linux-x86_64/config.h
+				fi
+				;;
+			i*86)
+				cp config.h ../autoconf-linux-i386/config.h ;;
+			armv7*)
+				cp config.h ../autoconf-linux-arm/config.h ;;
+			aarch64|arm64|armv8l)
+				if [ "$(getconf LONG_BIT)" = "32" ] ; then
+					cp config.h ../autoconf-linux-arm/config.h
+				else
+					cp config.h ../autoconf-linux-aarch64/config.h
+				fi
+				;;
+		esac
+		;;
 	"Darwin"|"darwin")
 		sed -i \
 			-e '/define HAVE_CC_SHA256_CTX/d' \

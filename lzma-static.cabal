@@ -1,6 +1,6 @@
 cabal-version:       2.2
 name:                lzma-static
-version:             5.2.5.1
+version:             5.2.5.2
 
 synopsis:            LZMA/XZ compression and decompression (static)
 homepage:            https://github.com/hasufell/lzma-static
@@ -26,7 +26,10 @@ extra-source-files:
   Changelog.md
   autoconf-darwin/config.h
   autoconf-freebsd/config.h
-  autoconf-linux/config.h
+  autoconf-linux-x86_64/config.h
+  autoconf-linux-i386/config.h
+  autoconf-linux-arm/config.h
+  autoconf-linux-aarch64/config.h
   autoconf-win32/config.h
   cbits/common/*.c
   cbits/common/*.h
@@ -67,7 +70,17 @@ library
   elif os(darwin)
     include-dirs: autoconf-darwin
   elif os(linux)
-    include-dirs: autoconf-linux
+    if arch(x86_64)
+      include-dirs: autoconf-linux-x86_64
+    elif arch(i386)
+      include-dirs: autoconf-linux-i386
+    elif arch(arm)
+      include-dirs: autoconf-linux-arm
+    elif arch(aarch64)
+      include-dirs: autoconf-linux-aarch64
+    else
+      build-depends: unbuildable<0
+      buildable: False
   elif os(freebsd)
     include-dirs: autoconf-freebsd
   else

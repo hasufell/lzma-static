@@ -1,3 +1,7 @@
+## 5.2.5.2
+
+* Add arm/aarch support
+
 ## 5.2.5.1
 
 * Add FreeBSD support
