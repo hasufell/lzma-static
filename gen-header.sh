@@ -42,13 +42,25 @@ case "$(uname -s)" in
 		esac
 		;;
 	"Darwin"|"darwin")
-		sed -i \
-			-e '/define HAVE_CC_SHA256_CTX/d' \
-			-e '/define HAVE_CC_SHA256_INIT/d' \
-			-e '/define HAVE_CLOCK_GETTIME/d' \
-			-e '/define HAVE_DECL_CLOCK_MONOTONIC/d' \
-			config.h
-		cp config.h ../autoconf-darwin/config.h ;;
+		case "$(uname -m)" in
+			x86_64|amd64)
+				sed -i '' \
+					-e '/define HAVE_CC_SHA256_CTX/d' \
+					-e '/define HAVE_CC_SHA256_INIT/d' \
+					-e '/define HAVE_CLOCK_GETTIME/d' \
+					-e '/define HAVE_DECL_CLOCK_MONOTONIC/d' \
+					config.h
+				cp config.h ../autoconf-darwin/config.h ;;
+			aarch64|arm64|armv8l)
+                                sed -i '' \
+                                        -e '/define HAVE_CC_SHA256_CTX/d' \
+                                        -e '/define HAVE_CC_SHA256_INIT/d' \
+                                        -e '/define HAVE_CLOCK_GETTIME/d' \
+                                        -e '/define HAVE_DECL_CLOCK_MONOTONIC/d' \
+                                        config.h
+                                cp config.h ../autoconf-darwin-aarch64/config.h ;;
+		esac
+		;;
 	"FreeBSD"|"freebsd")
 		cp config.h ../autoconf-freebsd/config.h ;;
 	*) die "Unknown platform" ;;
