@@ -62,7 +62,13 @@ case "$(uname -s)" in
 		esac
 		;;
 	"FreeBSD"|"freebsd")
-		cp config.h ../autoconf-freebsd/config.h ;;
+        case "$(uname -m)" in
+            x86_64|amd64)
+              cp config.h ../autoconf-freebsd/config.h ;;
+            aarch64|arm64|armv8l)
+              cp config.h ../autoconf-freebsd-aarch64/config.h ;;
+		esac
+		;;
 	*) die "Unknown platform" ;;
 esac
 

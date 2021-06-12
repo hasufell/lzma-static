@@ -27,6 +27,7 @@ extra-source-files:
   autoconf-darwin/config.h
   autoconf-darwin-aarch64/config.h
   autoconf-freebsd/config.h
+  autoconf-freebsd-aarch64/config.h
   autoconf-linux-x86_64/config.h
   autoconf-linux-i386/config.h
   autoconf-linux-arm/config.h
@@ -86,7 +87,10 @@ library
       build-depends: unbuildable<0
       buildable: False
   elif os(freebsd)
-    include-dirs: autoconf-freebsd
+    if arch(x86_64)
+      include-dirs: autoconf-freebsd
+    elif arch(aarch64)
+      include-dirs: autoconf-freebsd-aarch64
   else
     build-depends: unbuildable<0
     buildable: False

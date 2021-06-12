@@ -1,3 +1,7 @@
+## 5.2.5.4
+
+* Add Freebsd Aarch64 support
+
 ## 5.2.5.3
 
 * Add darwin aarch64 support
