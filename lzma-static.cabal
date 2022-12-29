@@ -1,6 +1,6 @@
 cabal-version:       2.2
 name:                lzma-static
-version:             5.2.5.4
+version:             5.2.5.5
 
 synopsis:            LZMA/XZ compression and decompression (static)
 homepage:            https://github.com/hasufell/lzma-static

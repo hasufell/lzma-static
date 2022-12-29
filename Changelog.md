@@ -1,3 +1,7 @@
+## 5.2.5.5
+
+* Support GHC 9.4
+
 ## 5.2.5.4
 
 * Add Freebsd Aarch64 support
