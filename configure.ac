@@ -17,12 +17,12 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([XZ Utils], m4_esyscmd([/bin/sh build-aux/version.sh]),
+AC_INIT([XZ Utils], [5.2.5],
 	[lasse.collin@tukaani.org], [xz], [https://tukaani.org/xz/])
-AC_CONFIG_SRCDIR([src/liblzma/common/common.h])
-AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_SRCDIR([cbits/liblzma/common/common.h])
+AC_CONFIG_AUX_DIR([build/autoconf])
+AC_CONFIG_MACRO_DIR([build/autoconf/m4])
+AC_CONFIG_HEADER([cbits/config.h])
 
 echo
 echo "$PACKAGE_STRING"
@@ -562,15 +562,15 @@ if test -z "$POSIX_SHELL" && test "x$enable_scripts" = xyes ; then
 	AC_MSG_ERROR([No POSIX conforming shell (sh) was found.])
 fi
 
-echo
-echo "Initializing Automake:"
+dnl echo
+dnl echo "Initializing Automake:"
 
 # We don't use "subdir-objects" yet because it breaks "make distclean" when
 # dependencies are enabled (as of Automake 1.14.1) due to this bug:
 # http://debbugs.gnu.org/cgi/bugreport.cgi?bug=17354
 # The -Wno-unsupported is used to silence warnings about missing
 # "subdir-objects".
-AM_INIT_AUTOMAKE([1.12 foreign tar-v7 filename-length-max=99 serial-tests -Wno-unsupported])
+# AM_INIT_AUTOMAKE([1.12 foreign tar-v7 filename-length-max=99 serial-tests -Wno-unsupported])
 AC_PROG_LN_S
 
 AC_PROG_CC_C99
@@ -578,7 +578,7 @@ if test x$ac_cv_prog_cc_c99 = xno ; then
 	AC_MSG_ERROR([No C99 compiler was found.])
 fi
 
-AM_PROG_CC_C_O
+# AM_PROG_CC_C_O
 AM_PROG_AS
 AC_USE_SYSTEM_EXTENSIONS
 
@@ -895,25 +895,25 @@ AC_SUBST([AM_CFLAGS])
 xz=`echo xz | sed "$program_transform_name"`
 AC_SUBST([xz])
 
-AC_CONFIG_FILES([
-	Doxyfile
-	Makefile
-	po/Makefile.in
-	lib/Makefile
-	src/Makefile
-	src/liblzma/Makefile
-	src/liblzma/api/Makefile
-	src/xz/Makefile
-	src/xzdec/Makefile
-	src/lzmainfo/Makefile
-	src/scripts/Makefile
-	tests/Makefile
-	debug/Makefile
-])
-AC_CONFIG_FILES([src/scripts/xzdiff], [chmod +x src/scripts/xzdiff])
-AC_CONFIG_FILES([src/scripts/xzgrep], [chmod +x src/scripts/xzgrep])
-AC_CONFIG_FILES([src/scripts/xzmore], [chmod +x src/scripts/xzmore])
-AC_CONFIG_FILES([src/scripts/xzless], [chmod +x src/scripts/xzless])
+dnl AC_CONFIG_FILES([
+dnl 	Doxyfile
+dnl 	Makefile
+dnl 	po/Makefile.in
+dnl 	lib/Makefile
+dnl 	src/Makefile
+dnl 	src/liblzma/Makefile
+dnl 	src/liblzma/api/Makefile
+dnl 	src/xz/Makefile
+dnl 	src/xzdec/Makefile
+dnl 	src/lzmainfo/Makefile
+dnl 	src/scripts/Makefile
+dnl 	tests/Makefile
+dnl 	debug/Makefile
+dnl ])
+dnl AC_CONFIG_FILES([src/scripts/xzdiff], [chmod +x src/scripts/xzdiff])
+dnl AC_CONFIG_FILES([src/scripts/xzgrep], [chmod +x src/scripts/xzgrep])
+dnl AC_CONFIG_FILES([src/scripts/xzmore], [chmod +x src/scripts/xzmore])
+dnl AC_CONFIG_FILES([src/scripts/xzless], [chmod +x src/scripts/xzless])
 
 AC_OUTPUT
 
