@@ -12,7 +12,7 @@ maintainer:          hasufell@posteo.de
 copyright:           (c) 2015, Herbert Valerio Riedel, (c) 2021 Julian Ospald
 stability:           experimental
 category:            Codec, Compression
-build-type:          Simple
+build-type:          Configure
 tested-with:         GHC==8.6.5, GHC==8.8.4, GHC==8.10.4
 description:
     This package provides a pure interface for compressing and
@@ -24,15 +24,6 @@ description:
 
 extra-source-files:
   Changelog.md
-  autoconf-darwin/config.h
-  autoconf-darwin-aarch64/config.h
-  autoconf-freebsd/config.h
-  autoconf-freebsd-aarch64/config.h
-  autoconf-linux-x86_64/config.h
-  autoconf-linux-i386/config.h
-  autoconf-linux-arm/config.h
-  autoconf-linux-aarch64/config.h
-  autoconf-win32/config.h
   cbits/common/*.c
   cbits/common/*.h
   cbits/liblzma/api/lzma.h
@@ -51,6 +42,14 @@ extra-source-files:
   cbits/liblzma/rangecoder/*.h
   cbits/liblzma/simple/*.c
   cbits/liblzma/simple/*.h
+  cbits/config.h.in
+  build/autoconf/config.guess
+  build/autoconf/config.rpath
+  build/autoconf/config.sub
+  build/autoconf/install-sh
+  build/autoconf/ltmain.sh
+  configure
+  configure.ac
 
 source-repository head
   type:     git
@@ -66,34 +65,6 @@ library
 
   build-depends:       base       >=4.5    && <5
                      , bytestring >=0.9.2  && <0.13
-
-  if os(windows)
-    include-dirs: autoconf-win32
-  elif os(darwin)
-    if arch(x86_64)
-      include-dirs: autoconf-darwin
-    elif arch(aarch64)
-      include-dirs: autoconf-darwin-aarch64
-  elif os(linux)
-    if arch(x86_64)
-      include-dirs: autoconf-linux-x86_64
-    elif arch(i386)
-      include-dirs: autoconf-linux-i386
-    elif arch(arm)
-      include-dirs: autoconf-linux-arm
-    elif arch(aarch64)
-      include-dirs: autoconf-linux-aarch64
-    else
-      build-depends: unbuildable<0
-      buildable: False
-  elif os(freebsd)
-    if arch(x86_64)
-      include-dirs: autoconf-freebsd
-    elif arch(aarch64)
-      include-dirs: autoconf-freebsd-aarch64
-  else
-    build-depends: unbuildable<0
-    buildable: False
 
   c-sources:
     cbits/lzma_wrapper.c
@@ -181,6 +152,7 @@ library
     cbits/liblzma/rangecoder
     cbits/liblzma/simple
     cbits/common
+    cbits/
 
   install-includes:
     lzma.h
