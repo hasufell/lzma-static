@@ -357,7 +357,7 @@ AC_ARG_ENABLE([threads], AS_HELP_STRING([--enable-threads=METHOD],
 
 if test "x$enable_threads" = xyes; then
 	case $host_os in
-		mingw*)
+		mingw* | cygwin | msys)
 			case $host_cpu in
 				i?86)   enable_threads=win95 ;;
 				*)      enable_threads=vista ;;
