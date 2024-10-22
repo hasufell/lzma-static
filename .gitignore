@@ -1,1 +1,9 @@
 dist-newstyle
+ABOUT-NLS
+aclocal.m4
+autom4te.cache
+build
+cbits/config.h.in~
+configure
+po
+*.tar.bz2
