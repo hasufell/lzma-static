@@ -49,7 +49,6 @@ extra-source-files:
   build/autoconf/install-sh
   build/autoconf/ltmain.sh
   configure
-  configure.ac
 
 source-repository head
   type:     git
