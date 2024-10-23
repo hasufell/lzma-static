@@ -21,8 +21,8 @@ cd "xz-${XZ_VER}"
 rm -rf ../cbits/common
 rm -rf ../cbits/liblzma
 rm -f ../cbits/config.hs.in
-find src/common ! -name '*.[chS]' -delete
-find src/liblzma ! -name '*.[chS]' -delete
+find src/common -type f ! -name '*.[chS]' -delete
+find src/liblzma -type f ! -name '*.[chS]' -delete
 cp -a src/common ../cbits/
 cp -a src/liblzma ../cbits/
 cp config.h.in ../cbits/

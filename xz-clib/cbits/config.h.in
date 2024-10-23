@@ -10,6 +10,10 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* Define to 1 if ARM64 CRC32 instruction is supported. See configure.ac for
+   details. */
+#undef HAVE_ARM64_CRC32
+
 /* Define to 1 if bswap_16 is available. */
 #undef HAVE_BSWAP_16
 
@@ -22,8 +26,8 @@
 /* Define to 1 if you have the <byteswap.h> header file. */
 #undef HAVE_BYTESWAP_H
 
-/* Define to 1 if Capsicum is available. */
-#undef HAVE_CAPSICUM
+/* Define to 1 if you have the 'cap_rights_limit' function. */
+#undef HAVE_CAP_RIGHTS_LIMIT
 
 /* Define to 1 if the system has the type 'CC_SHA256_CTX'. */
 #undef HAVE_CC_SHA256_CTX
@@ -51,26 +55,30 @@
 /* Define to 1 if you have the 'clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
+/* Define to 1 if 'CLOCK_MONOTONIC' is declared in <time.h>. */
+#undef HAVE_CLOCK_MONOTONIC
+
 /* Define to 1 if you have the <CommonCrypto/CommonDigest.h> header file. */
 #undef HAVE_COMMONCRYPTO_COMMONDIGEST_H
+
+/* Define to 1 if you have the <cpuid.h> header file. */
+#undef HAVE_CPUID_H
+
+/* Define to 1 if the 32-bit x86 CRC assembly files are used. */
+#undef HAVE_CRC_X86_ASM
 
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
 #undef HAVE_DCGETTEXT
-
-/* Define to 1 if you have the declaration of 'CLOCK_MONOTONIC', and to 0 if
-   you don't. */
-#undef HAVE_DECL_CLOCK_MONOTONIC
-
-/* Define to 1 if you have the declaration of 'program_invocation_name', and
-   to 0 if you don't. */
-#undef HAVE_DECL_PROGRAM_INVOCATION_NAME
 
 /* Define to 1 if any of HAVE_DECODER_foo have been defined. */
 #undef HAVE_DECODERS
 
 /* Define to 1 if arm decoder is enabled. */
 #undef HAVE_DECODER_ARM
+
+/* Define to 1 if arm64 decoder is enabled. */
+#undef HAVE_DECODER_ARM64
 
 /* Define to 1 if armthumb decoder is enabled. */
 #undef HAVE_DECODER_ARMTHUMB
@@ -90,6 +98,9 @@
 /* Define to 1 if powerpc decoder is enabled. */
 #undef HAVE_DECODER_POWERPC
 
+/* Define to 1 if riscv decoder is enabled. */
+#undef HAVE_DECODER_RISCV
+
 /* Define to 1 if sparc decoder is enabled. */
 #undef HAVE_DECODER_SPARC
 
@@ -99,11 +110,17 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define to 1 if you have the 'elf_aux_info' function. */
+#undef HAVE_ELF_AUX_INFO
+
 /* Define to 1 if any of HAVE_ENCODER_foo have been defined. */
 #undef HAVE_ENCODERS
 
 /* Define to 1 if arm encoder is enabled. */
 #undef HAVE_ENCODER_ARM
+
+/* Define to 1 if arm64 encoder is enabled. */
+#undef HAVE_ENCODER_ARM64
 
 /* Define to 1 if armthumb encoder is enabled. */
 #undef HAVE_ENCODER_ARMTHUMB
@@ -123,14 +140,18 @@
 /* Define to 1 if powerpc encoder is enabled. */
 #undef HAVE_ENCODER_POWERPC
 
+/* Define to 1 if riscv encoder is enabled. */
+#undef HAVE_ENCODER_RISCV
+
 /* Define to 1 if sparc encoder is enabled. */
 #undef HAVE_ENCODER_SPARC
 
 /* Define to 1 if x86 encoder is enabled. */
 #undef HAVE_ENCODER_X86
 
-/* Define to 1 if you have the <fcntl.h> header file. */
-#undef HAVE_FCNTL_H
+/* Define to 1 if __attribute__((__constructor__)) is supported for functions.
+   */
+#undef HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR
 
 /* Define to 1 if you have the 'futimens' function. */
 #undef HAVE_FUTIMENS
@@ -140,6 +161,9 @@
 
 /* Define to 1 if you have the 'futimesat' function. */
 #undef HAVE_FUTIMESAT
+
+/* Define to 1 if you have the 'getauxval' function. */
+#undef HAVE_GETAUXVAL
 
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
@@ -159,8 +183,15 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the <limits.h> header file. */
-#undef HAVE_LIMITS_H
+/* Define to 1 if Linux Landlock is supported. See configure.ac for details.
+   */
+#undef HAVE_LINUX_LANDLOCK
+
+/* Define to 1 if 64-bit LoongArch CRC32 instructions are supported. */
+#undef HAVE_LOONGARCH_CRC32
+
+/* Define to 1 if .lz (lzip) decompression support is enabled. */
+#undef HAVE_LZIP_DECODER
 
 /* Define to 1 if mbrtowc and mbstate_t are properly declared. */
 #undef HAVE_MBRTOWC
@@ -186,8 +217,14 @@
 /* Define to 1 if getopt.h declares extern int optreset. */
 #undef HAVE_OPTRESET
 
+/* Define to 1 if you have the 'pledge' function. */
+#undef HAVE_PLEDGE
+
 /* Define to 1 if you have the 'posix_fadvise' function. */
 #undef HAVE_POSIX_FADVISE
+
+/* Define to 1 if 'program_invocation_name' is declared in <errno.h>. */
+#undef HAVE_PROGRAM_INVOCATION_NAME
 
 /* Define to 1 if you have the 'pthread_condattr_setclock' function. */
 #undef HAVE_PTHREAD_CONDATTR_SETCLOCK
@@ -249,11 +286,21 @@
 /* Define to 1 if 'st_uatime' is a member of 'struct stat'. */
 #undef HAVE_STRUCT_STAT_ST_UATIME
 
+/* Define to 1 to if GNU/Linux-specific details are unconditionally wanted for
+   symbol versioning. Define to 2 to if these are wanted only if also PIC is
+   defined (allows building both shared and static liblzma at the same time
+   with Libtool if neither --with-pic nor --without-pic is used). This define
+   must be used together with liblzma_linux.map. */
+#undef HAVE_SYMBOL_VERSIONS_LINUX
+
+/* Define to 1 if you have the 'sysctlbyname' function. */
+#undef HAVE_SYSCTLBYNAME
+
 /* Define to 1 if you have the <sys/byteorder.h> header file. */
 #undef HAVE_SYS_BYTEORDER_H
 
-/* Define to 1 if you have the <sys/capsicum.h> header file. */
-#undef HAVE_SYS_CAPSICUM_H
+/* Define to 1 if you have the <sys/cdefs.h> header file. */
+#undef HAVE_SYS_CDEFS_H
 
 /* Define to 1 if you have the <sys/endian.h> header file. */
 #undef HAVE_SYS_ENDIAN_H
@@ -264,9 +311,6 @@
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
-/* Define to 1 if you have the <sys/time.h> header file. */
-#undef HAVE_SYS_TIME_H
-
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
@@ -275,6 +319,10 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
+
+/* Define to 1 if _mm_set_epi64x and _mm_clmulepi64_si128 are usable. See
+   configure.ac for details. */
+#undef HAVE_USABLE_CLMUL
 
 /* Define to 1 if you have the 'utime' function. */
 #undef HAVE_UTIME
@@ -376,8 +424,8 @@
    sysctl(). */
 #undef TUKLIB_CPUCORES_SYSCTL
 
-/* Define to 1 if the system supports fast unaligned access to 16-bit and
-   32-bit integers. */
+/* Define to 1 if the system supports fast unaligned access to 16-bit, 32-bit,
+   and 64-bit integers. */
 #undef TUKLIB_FAST_UNALIGNED_ACCESS
 
 /* Define to 1 if the amount of physical memory can be detected with
