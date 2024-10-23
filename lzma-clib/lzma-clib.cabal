@@ -1,29 +1,24 @@
 cabal-version:       2.2
-name:                lzma-static
-version:             5.2.5.5
+name:                lzma-clib
+version:             5.2.5
 
-synopsis:            LZMA/XZ compression and decompression (static)
+synopsis:            lzma clibs
+description:         C source code for the LZMA/XZ compression and decompression library
 homepage:            https://github.com/hasufell/lzma-static
 bug-reports:         https://github.com/hasufell/lzma-static/issues
-license:             BSD-3-Clause
-license-file:        LICENSE
+license:             0BSD
+license-file:        cbits/LICENSE
 author:              Julian Ospald
 maintainer:          hasufell@posteo.de
-copyright:           (c) 2015, Herbert Valerio Riedel, (c) 2021 Julian Ospald
+copyright:           (c) 2021 Julian Ospald
 stability:           experimental
 category:            Codec, Compression
 build-type:          Configure
-tested-with:         GHC==8.6.5, GHC==8.8.4, GHC==8.10.4
-description:
-    This package provides a pure interface for compressing and
-    decompressing
-    <https://en.wikipedia.org/wiki/LZMA LZMA (Lempel–Ziv–Markov chain algorithm)>
-    streams of data represented as lazy @ByteString@s. A
-    monadic incremental interface is provided as well. This package
-    relies on the <http://tukaani.org/xz/ liblzma C library>.
+
+extra-doc-files:
+  Changelog.md
 
 extra-source-files:
-  Changelog.md
   cbits/common/*.c
   cbits/common/*.h
   cbits/liblzma/api/lzma.h
@@ -56,15 +51,6 @@ source-repository head
 
 library
   default-language:    Haskell2010
-  other-extensions:    BangPatterns, RecordWildCards, DeriveDataTypeable
-  hs-source-dirs:      src
-
-  exposed-modules:     Codec.Compression.Lzma
-  other-modules:       LibLzma
-
-  build-depends:       base       >=4.5    && <5
-                     , bytestring >=0.9.2  && <0.13
-
   c-sources:
     cbits/lzma_wrapper.c
     cbits/common/tuklib_cpucores.c
@@ -171,25 +157,4 @@ library
     lzma/vli.h
 
   cc-options: -std=gnu99 -DHAVE_CONFIG_H -DTUKLIB_SYMBOL_PREFIX=lzma_
-  ghc-options:         -Wall
 
-
-test-suite lzma-tests
-  default-language:    Haskell2010
-  other-extensions:    OverloadedStrings
-  hs-source-dirs:      src-tests
-  type:                exitcode-stdio-1.0
-  main-is:             lzma-tests.hs
-
-  -- dependencies with version bounds inherited from the library stanza
-  build-depends:       lzma-static
-                     , base
-                     , bytestring
-  -- additional dependencies that require version bounds
-  build-depends:       HUnit                      >= 1.2      && <1.7
-                     , QuickCheck                 >= 2.8      && <2.15
-                     , tasty                      >= 0.10     && <1.4
-                     , tasty-hunit                >= 0.9      && <0.11
-                     , tasty-quickcheck           >= 0.8.3.2  && <0.11
-
-  ghc-options:         -Wall -threaded

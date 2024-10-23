@@ -1,2 +1,3 @@
-packages: .
+packages: ./lzma-clib/lzma-clib.cabal
+          ./lzma-static/lzma-static.cabal
 tests: true
