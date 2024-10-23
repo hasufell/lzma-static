@@ -1,3 +1,8 @@
+## 5.2.5.6
+
+* Fork cbits off and rename package
+* Also allow to link to system lzma
+
 ## 5.2.5.5
 
 * Support GHC 9.4

@@ -1,8 +1,8 @@
 cabal-version:       2.2
-name:                lzma-clib
+name:                xz-clib
 version:             5.2.5
 
-synopsis:            lzma clibs
+synopsis:            LZMA/XZ clibs
 description:         C source code for the LZMA/XZ compression and decompression library
 homepage:            https://github.com/hasufell/lzma-static
 bug-reports:         https://github.com/hasufell/lzma-static/issues
@@ -52,7 +52,6 @@ source-repository head
 library
   default-language:    Haskell2010
   c-sources:
-    cbits/lzma_wrapper.c
     cbits/common/tuklib_cpucores.c
     cbits/common/tuklib_physmem.c
     cbits/liblzma/check/check.c
