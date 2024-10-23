@@ -2,7 +2,7 @@
 
 set -xe
 
-XZ_VER="5.2.5"
+XZ_VER="5.6.3"
 XZ_BALL="xz-${XZ_VER}.tar.bz2"
 XZ_URL="https://tukaani.org/xz/${XZ_BALL}"
 
