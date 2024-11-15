@@ -1,2 +1,3 @@
-packages: .
+packages: ./xz-clib/xz-clib.cabal
+          ./xz/xz.cabal
 tests: true
