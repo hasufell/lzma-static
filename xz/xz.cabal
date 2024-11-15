@@ -1,6 +1,6 @@
 cabal-version:       2.2
 name:                xz
-version:             5.2.5.5
+version:             5.6.3
 
 synopsis:            LZMA/XZ compression and decompression
 homepage:            https://github.com/hasufell/lzma-static
@@ -28,6 +28,7 @@ extra-doc-files:
 source-repository head
   type:     git
   location: https://github.com/hasufell/lzma-static.git
+  subdir: xz
 
 flag system-xz
     description:

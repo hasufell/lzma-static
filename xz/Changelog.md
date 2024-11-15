@@ -1,4 +1,4 @@
-## 5.2.5.6
+## 5.6.3
 
 * Fork cbits off and rename package
 * Also allow to link to system lzma
