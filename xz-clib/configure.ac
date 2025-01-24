@@ -16,7 +16,7 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([XZ Utils], [5.6.3],
+AC_INIT([XZ Utils], [5.6.4],
 	[lasse.collin@tukaani.org], [xz], [https://tukaani.org/xz/])
 AC_CONFIG_SRCDIR([cbits/liblzma/common/common.h])
 AC_CONFIG_AUX_DIR([build/autoconf])
