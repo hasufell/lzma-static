@@ -16,7 +16,7 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([XZ Utils], [5.6.4],
+AC_INIT([XZ Utils], [5.8.0],
 	[lasse.collin@tukaani.org], [xz], [https://tukaani.org/xz/])
 AC_CONFIG_SRCDIR([cbits/liblzma/common/common.h])
 AC_CONFIG_AUX_DIR([build/autoconf])
@@ -826,6 +826,35 @@ AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
 AM_GNU_GETTEXT_VERSION([0.19.6])
 AM_GNU_GETTEXT([external])
 
+# The command line tools use UTF-8 on native Windows. Non-ASCII characters
+# display correctly only when using UCRT and gettext-runtime >= 0.23.1.
+AS_CASE([$USE_NLS-$host_os],
+	[yes-mingw*], [
+		AC_MSG_CHECKING([for UCRT and gettext-runtime >= 0.23.1])
+		AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
+			#define WIN32_LEAN_AND_MEAN
+			#include <windows.h>
+			#include <libintl.h>
+
+			#ifndef _UCRT
+			#error "Not UCRT"
+			#endif
+
+			#if LIBINTL_VERSION < 0x001701
+			#error "gettext-runtime < 0.23.1"
+			#endif
+		]])], [
+			AC_MSG_RESULT([yes])
+		], [
+			AC_MSG_RESULT([no])
+			AC_MSG_ERROR([
+    Translation support (--enable-nls) on native Windows requires
+    UCRT and gettext-runtime >= 0.23.1. Use --disable-nls to build
+    with MSVCRT or old gettext-runtime.])
+		])
+	]
+)
+
 
 ###############################################################################
 # Checks for header files.
@@ -871,13 +900,6 @@ AC_C_BIGENDIAN
 # __attribute__((__constructor__)) can be used for one-time initializations.
 # Use -Werror because some compilers accept unknown attributes and just
 # give a warning.
-#
-# FIXME? Unfortunately -Werror can cause trouble if CFLAGS contains options
-# that produce warnings for unrelated reasons. For example, GCC and Clang
-# support -Wunused-macros which will warn about "#define _GNU_SOURCE 1"
-# which will be among the #defines that Autoconf inserts to the beginning of
-# the test program. There seems to be no nice way to prevent Autoconf from
-# inserting the any defines to the test program.
 AC_MSG_CHECKING([if __attribute__((__constructor__)) can be used])
 have_func_attribute_constructor=no
 OLD_CFLAGS="$CFLAGS"
@@ -1187,8 +1209,9 @@ AS_CASE([$enable_sandbox],
 		]])], [
 			enable_sandbox=found
 
-			AS_CASE([$CFLAGS], [*-fsanitize=*], [AC_MSG_ERROR([
-    CFLAGS contains '-fsanitize=' which is incompatible with the Landlock
+			AS_CASE(["$CC $CFLAGS"], [*-fsanitize=*],
+				[AC_MSG_ERROR([
+    CC or CFLAGS contain '-fsanitize=' which is incompatible with the Landlock
     sandboxing. Use --disable-sandbox when using '-fsanitize'.])])
 
 			AC_DEFINE([HAVE_LINUX_LANDLOCK], [1],
@@ -1270,6 +1293,8 @@ AS_IF([test "$GCC" = yes], [
 			-Wmissing-prototypes \
 			-Wmissing-declarations \
 			-Wredundant-decls \
+			-Wimplicit-fallthrough \
+			-Wimplicit-fallthrough=5 \
 			\
 			-Wc99-compat \
 			-Wc11-extensions \
