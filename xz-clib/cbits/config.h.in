@@ -330,6 +330,9 @@
 /* Define to 1 if you have the 'utimes' function. */
 #undef HAVE_UTIMES
 
+/* Define to 1 if you have the 'vasprintf' function. */
+#undef HAVE_VASPRINTF
+
 /* Define to 1 or 0, depending whether the compiler supports simple visibility
    declarations. */
 #undef HAVE_VISIBILITY
