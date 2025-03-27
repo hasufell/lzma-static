@@ -1,6 +1,6 @@
 cabal-version:       2.2
 name:                xz-clib
-version:             5.8.0
+version:             5.8.0.1
 
 synopsis:            LZMA/XZ clibs
 description:         C source code for the LZMA/XZ compression and decompression library
@@ -54,8 +54,6 @@ library
   default-language:    Haskell2010
   c-sources:
     cbits/common/tuklib_cpucores.c
-    cbits/common/tuklib_mbstr_nonprint.c
-    cbits/common/tuklib_mbstr_wrap.c
     cbits/common/tuklib_physmem.c
     cbits/liblzma/check/check.c
     cbits/liblzma/check/crc32_fast.c
