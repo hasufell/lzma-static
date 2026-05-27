@@ -523,12 +523,6 @@ AC_ARG_ENABLE([lzma-links], [AS_HELP_STRING([--disable-lzma-links],
 	[], [enable_lzma_links=yes])
 AM_CONDITIONAL([COND_LZMALINKS], [test x$enable_lzma_links != xno])
 
-AC_ARG_ENABLE([scripts], [AS_HELP_STRING([--disable-scripts],
-		[do not install the scripts xzdiff, xzgrep, xzless, xzmore,
-		and their symlinks])],
-	[], [enable_scripts=yes])
-AM_CONDITIONAL([COND_SCRIPTS], [test x$enable_scripts != xno])
-
 AC_ARG_ENABLE([doc], [AS_HELP_STRING([--disable-doc],
 		[do not install documentation files to docdir
 		(man pages are still installed and,
@@ -573,51 +567,10 @@ case $enable_xzdec-$enable_xz-$enable_sandbox in
 esac
 
 
-###########################
-# PATH prefix for scripts #
-###########################
-
-# The scripts can add a prefix to the search PATH so that POSIX tools
-# or the xz binary is always in the PATH.
-AC_ARG_ENABLE([path-for-scripts],
-	[AS_HELP_STRING([--enable-path-for-scripts=PREFIX],
-		[If PREFIX isn't empty, PATH=PREFIX:$PATH will be set in
-		the beginning of the scripts (xzgrep and others).
-		The default is empty except on Solaris the default is
-		/usr/xpg4/bin.])],
-	[], [
-		case $host_os in
-			solaris*) enable_path_for_scripts=/usr/xpg4/bin ;;
-			*)        enable_path_for_scripts= ;;
-		esac
-	])
-if test -n "$enable_path_for_scripts" && test "x$enable_path_for_scripts" != xno ; then
-	enable_path_for_scripts="PATH=$enable_path_for_scripts:\$PATH"
-else
-	enable_path_for_scripts=
-fi
-AC_SUBST([enable_path_for_scripts])
-
-
 ###############################################################################
 # Checks for programs.
 ###############################################################################
 
-echo
-case $host_os in
-	solaris*)
-		# The gnulib POSIX shell macro below may pick a shell that
-		# doesn't work with xzgrep. Workaround by picking a shell
-		# that is known to work.
-		if test -z "$gl_cv_posix_shell" && test -x /usr/xpg4/bin/sh; then
-			gl_cv_posix_shell=/usr/xpg4/bin/sh
-		fi
-		;;
-esac
-gl_POSIX_SHELL
-if test -z "$POSIX_SHELL" && test "x$enable_scripts" = xyes ; then
-	AC_MSG_ERROR([No POSIX conforming shell (sh) was found.])
-fi
 
 dnl echo
 dnl echo "Initializing Automake:"
