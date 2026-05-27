@@ -1,4 +1,4 @@
-/* cbits/config.h.in.  Generated from configure.ac by autoheader.  */
+/* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
@@ -171,8 +171,14 @@
 /* Define to 1 if you have the 'getopt_long' function. */
 #undef HAVE_GETOPT_LONG
 
+/* Define to 1 if you have the 'getrlimit' function. */
+#undef HAVE_GETRLIMIT
+
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
+
+/* Define to 1 if 'HWCAP_CRC32' is declared in <sys/auxv.h>. */
+#undef HAVE_HWCAP_CRC32
 
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
@@ -377,6 +383,9 @@
 /* Define to 1 to disable debugging code. */
 #undef NDEBUG
 
+/* Name of package */
+#undef PACKAGE
+
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
@@ -468,6 +477,10 @@
 #ifndef _ALL_SOURCE
 # undef _ALL_SOURCE
 #endif
+/* Enable extensions on Cosmopolitan Libc. */
+#ifndef _COSMO_SOURCE
+# undef _COSMO_SOURCE
+#endif
 /* Enable general extensions on macOS.  */
 #ifndef _DARWIN_C_SOURCE
 # undef _DARWIN_C_SOURCE
@@ -555,6 +568,9 @@
 # undef _XOPEN_SOURCE
 #endif
 
+
+/* Version number of package */
+#undef VERSION
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
