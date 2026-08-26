@@ -1,3 +1,10 @@
+## Unreleased
+
+* Expose `Codec.Compression.Lzma.Internal` (the raw stream primitives,
+  `endLzmaStream` included) and add `compressIOWith` and
+  `decompressIOWith`, which return the underlying `LzmaStream` so an
+  abandoned stream can be ended eagerly
+
 ## 5.6.3
 
 * Fork cbits off and rename package

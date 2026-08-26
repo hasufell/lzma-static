@@ -13,6 +13,8 @@ import           Test.Tasty.QuickCheck as QC
 import           Test.Tasty.HUnit
 
 import           Codec.Compression.Lzma as Lzma
+import           Codec.Compression.Lzma.Internal (endLzmaStream)
+import           Control.Monad.ST (stToIO)
 
 main :: IO ()
 main = defaultMain tests
@@ -20,6 +22,29 @@ main = defaultMain tests
 -- this is supposed to be equivalent to 'id'
 codecompress :: BL.ByteString -> BL.ByteString
 codecompress = decompress . compress
+
+-- drive a decompression stream over the given chunks (then end of
+-- input), collecting all output
+feedDecompress :: [BS.ByteString] -> DecompressStream IO -> IO BL.ByteString
+feedDecompress ins0 s0 = go ins0 s0 []
+  where
+    go ins (DecompressInputRequired supply) acc = case ins of
+        []     -> supply BS.empty >>= \s -> go [] s acc
+        (c:cs) -> supply c >>= \s -> go cs s acc
+    go ins (DecompressOutputAvailable o next) acc = next >>= \s -> go ins s (o:acc)
+    go _ (DecompressStreamEnd _) acc = return (BL.fromChunks (reverse acc))
+    go _ (DecompressStreamError rc) _ = fail ("feedDecompress: " ++ show rc)
+
+-- drive a compression stream over the given chunks (then end of
+-- input), collecting all output
+feedCompress :: [BS.ByteString] -> CompressStream IO -> IO BL.ByteString
+feedCompress ins0 s0 = go ins0 s0 []
+  where
+    go ins (CompressInputRequired _flush supply) acc = case ins of
+        []     -> supply BS.empty >>= \s -> go [] s acc
+        (c:cs) -> supply c >>= \s -> go cs s acc
+    go ins (CompressOutputAvailable o next) acc = next >>= \s -> go ins s (o:acc)
+    go _ CompressStreamEnd acc = return (BL.fromChunks (reverse acc))
 
 newtype ZeroBS = ZeroBS BL.ByteString
 
@@ -70,6 +95,30 @@ tests = testGroup "ByteString API" [unitTests, properties]
         , testCase "encode-sample" $ codecompress sampleref @?= sampleref
         , testCase "encode-empty^50" $ (iterate decompress (iterate (compressWith lowProf) (BL8.pack "") !! 50) !! 50) @?= BL8.pack ""
         , testCase "encode-10MiB-zeros" $ let z = BL.replicate (10*1024*1024) 0 in codecompress z @?= z
+        , testCase "decode-teardown-mid-stream" $ do
+              (s0, ls) <- decompressIOWith defaultDecompressParams
+              _ <- case s0 of
+                     DecompressInputRequired supply -> supply (BL.toStrict (BL.take 512 samplexz))
+                     _ -> fail "expected DecompressInputRequired"
+              stToIO (endLzmaStream ls)
+              stToIO (endLzmaStream ls) -- idempotent, must be a no-op
+        , testCase "decode-teardown-after-end" $ do
+              (s0, ls) <- decompressIOWith defaultDecompressParams
+              out <- feedDecompress (BL.toChunks samplexz) s0
+              stToIO (endLzmaStream ls) -- after natural end, must be a no-op
+              out @?= sampleref
+        , testCase "encode-teardown-mid-stream" $ do
+              (s0, ls) <- compressIOWith defaultCompressParams
+              _ <- case s0 of
+                     CompressInputRequired _ supply -> supply (BL.toStrict (BL8.pack "hello"))
+                     _ -> fail "expected CompressInputRequired"
+              stToIO (endLzmaStream ls)
+              stToIO (endLzmaStream ls) -- idempotent, must be a no-op
+        , testCase "encode-teardown-after-end" $ do
+              (s0, ls) <- compressIOWith defaultCompressParams
+              out <- feedCompress [BL.toStrict (BL8.pack "hello")] s0
+              stToIO (endLzmaStream ls) -- after natural end, must be a no-op
+              decompress out @?= BL8.pack "hello"
         ]
 
     properties = testGroup "properties"
