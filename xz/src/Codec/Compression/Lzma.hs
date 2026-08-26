@@ -27,11 +27,13 @@ module Codec.Compression.Lzma
       -- ** Compression
     , CompressStream(..)
     , compressIO
+    , compressIOWith
     , compressST
 
       -- ** Decompression
     , DecompressStream(..)
     , decompressIO
+    , decompressIOWith
     , decompressST
     , LzmaRet(..)
 
@@ -150,12 +152,28 @@ data CompressStream m =
 
 -- | Incremental compression in the 'IO' monad.
 compressIO :: CompressParams -> IO (CompressStream IO)
-compressIO parms = (stToIO $ newEncodeLzmaStream parms) >>= either throwIO go
+compressIO = fmap fst . compressIOWith
+
+-- | Variant of 'compressIO' which additionally returns the underlying
+-- 'LzmaStream'.
+--
+-- The handle enables ending an abandoned stream eagerly via
+-- 'Codec.Compression.Lzma.Internal.endLzmaStream' (e.g. in the
+-- cleanup handler of a 'Control.Exception.bracket') instead of
+-- leaving the encoder to the garbage collector. Ending the stream
+-- more than once, or after it has ended on its own, is a no-op; it is
+-- a programming error to continue the associated 'CompressStream'
+-- after ending it.
+compressIOWith :: CompressParams -> IO (CompressStream IO, LzmaStream)
+compressIOWith parms = (stToIO $ newEncodeLzmaStream parms) >>= either throwIO compressStreamIO
+
+compressStreamIO :: LzmaStream -> IO (CompressStream IO, LzmaStream)
+compressStreamIO = go
   where
     bUFSIZ = 32752
 
-    go :: LzmaStream -> IO (CompressStream IO)
-    go ls = return inputRequired
+    go :: LzmaStream -> IO (CompressStream IO, LzmaStream)
+    go ls = return (inputRequired, ls)
       where
         inputRequired = CompressInputRequired goFlush (withChunk goFinish goInput)
 
@@ -265,12 +283,35 @@ data DecompressStream m =
 
 -- | Incremental decompression in the 'IO' monad.
 decompressIO :: DecompressParams -> IO (DecompressStream IO)
-decompressIO parms = stToIO (newDecodeLzmaStream parms) >>= either (return . DecompressStreamError) go
+decompressIO parms = stToIO (newDecodeLzmaStream parms)
+                     >>= either (return . DecompressStreamError) (fmap fst . decompressStreamIO)
+
+-- | Variant of 'decompressIO' which additionally returns the
+-- underlying 'LzmaStream'.
+--
+-- The handle enables what the stream value cannot express, most
+-- importantly ending an abandoned stream eagerly via
+-- 'Codec.Compression.Lzma.Internal.endLzmaStream' (e.g. in the
+-- cleanup handler of a 'Control.Exception.bracket') instead of
+-- leaving the decoder to the garbage collector; an abandoned decoder
+-- can hold memory up to the stream's declared dictionary size.
+-- Ending the stream more than once, or after it has ended on its own,
+-- is a no-op; it is a programming error to continue the associated
+-- 'DecompressStream' after ending it.
+--
+-- Unlike 'decompressIO', initialization failure is thrown here (the
+-- convention 'compressIO' has always used), since no stream exists to
+-- pair a handle with.
+decompressIOWith :: DecompressParams -> IO (DecompressStream IO, LzmaStream)
+decompressIOWith parms = stToIO (newDecodeLzmaStream parms) >>= either throwIO decompressStreamIO
+
+decompressStreamIO :: LzmaStream -> IO (DecompressStream IO, LzmaStream)
+decompressStreamIO = go
   where
     bUFSIZ = 32752
 
-    go :: LzmaStream -> IO (DecompressStream IO)
-    go ls = return inputRequired
+    go :: LzmaStream -> IO (DecompressStream IO, LzmaStream)
+    go ls = return (inputRequired, ls)
       where
         inputRequired = DecompressInputRequired goInput
 
