@@ -2,9 +2,14 @@
 
 set -xe
 
-XZ_VER="5.8.2"
-XZ_BALL="xz-${XZ_VER}.tar.bz2"
-XZ_URL="https://tukaani.org/xz/${XZ_BALL}"
+if [ -z "$1" ] ; then
+	echo "No xz version specified, aborting..."
+	exit 1
+fi
+
+XZ_VER="$1"
+XZ_BALL="xz-${XZ_VER}.tar.xz"
+XZ_URL="https://github.com/tukaani-project/xz/releases/download/v${XZ_VER}/${XZ_BALL}"
 
 AC_OUT_DIR="build/autoconf"
 

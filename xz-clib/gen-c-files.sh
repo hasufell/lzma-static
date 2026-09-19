@@ -8,8 +8,8 @@ if [ -z "$1" ] ; then
 fi
 
 XZ_VER="$1"
-XZ_BALL="xz-${XZ_VER}.tar.bz2"
-XZ_URL="https://tukaani.org/xz/${XZ_BALL}"
+XZ_BALL="xz-${XZ_VER}.tar.xz"
+XZ_URL="https://github.com/tukaani-project/xz/releases/download/v${XZ_VER}/${XZ_BALL}"
 
 [ -f "${XZ_BALL}" ] || curl -LO "${XZ_URL}"
 
